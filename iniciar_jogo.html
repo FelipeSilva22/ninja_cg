@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jogo - Naruto TCG</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Iniciar Jogo</h1>
+
+    <!-- Etapa 1: Inserir nome do jogador -->
+    <div id="player-name-container">
+      <label for="player-name">Digite seu nome (3-15 caracteres):</label>
+      <input type="text" id="player-name" maxlength="15" placeholder="Seu Nome">
+      <button id="confirm-name-btn" onclick="confirmarNome()">Confirmar Nome</button>
+    </div>
+
+    <!-- Etapa 2: Seleção de baralhos -->
+    <div id="deck-selection-container" class="hidden">
+      <h2>Selecione seu Baralho</h2>
+      <div id="player-deck-container" class="decks-grid">
+        <!-- Baralhos do jogador serão exibidos aqui -->
+      </div>
+
+      <h2>Selecione o Baralho da IA</h2>
+      <div id="ia-deck-container" class="decks-grid">
+        <!-- Baralhos da IA serão exibidos aqui -->
+      </div>
+      <button id="btn-selecao-aleatoria" onclick="selecionarBaralhoIA()">Escolha Aleatória</button>
+    </div>
+
+    <!-- Botão para iniciar o combate -->
+    <button id="start-combat-btn" class="hidden" onclick="iniciarCombate()">Iniciar Combate</button>
+  </div>
+  <footer>
+    <button onclick="voltarPaginaInicial()">Voltar ao Menu</button>
+    <p>Desenvolvido por [Felipe Josuel]</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

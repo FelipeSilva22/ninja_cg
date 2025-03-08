@@ -1,0 +1,370 @@
+[
+    {
+        "type": "Tool",
+        "idCard": "T001",
+        "name": "Tensei",
+        "effect": "edoTensei-H",
+        "descricao": "Selecione um ninja do descarte e coloque-o na mão",
+        "photo": "imagens/T001.png"
+    },
+    {
+        "type": "Tool",
+        "idCard": "T002",
+        "name": "Invocar Ninja",
+        "effect": "kuchiyoseN1-1",
+        "descricao": "Selecione 1 ninja estagio 1 do baralho e coloque-o na mão",
+        "photo": "imagens/T002.png"
+    },
+    {
+        "type": "Tool",
+        "idCard": "T003",
+        "name": "Invocar Ninja",
+        "effect": "kuchiyoseN1-2",
+        "descricao": "Selecione 2 ninjas estagio 1 do baralho e coloque-o na mão",
+        "photo": "imagens/T003.png"
+    },
+    {
+        "type": "Tool",
+        "idCard": "T004",
+        "name": "Invocar Ninja",
+        "effect": "kuchiyoseN2-1",
+        "descricao": "Selecione 1 ninja estagio 2 ou 3 do baralho e coloque-o na mão",
+        "photo": "imagens/T004.png"
+    },
+    {
+        "type": "Tool",
+        "idCard": "T005",
+        "name": "Invocar Ninja",
+        "effect": "kuchiyoseN2-2",
+        "descricao": "Selecione 2 ninjas estagio 2 ou 3 do baralho e coloque-o na mão",
+        "photo": "imagens/T005.png"
+    },
+    {
+        "type": "Tool",
+        "idCard": "T006",
+        "name": "Deslacramento Deck",
+        "effect": "kaifuu-BH1",
+        "descricao": "Selecione 1 tool do baralho e coloque-o na mão",
+        "photo": "imagens/T006.png"
+    },
+    {
+        "type": "Tool",
+        "idCard": "T007",
+        "name": "Deslacramento Deck",
+        "effect": "kaifuu-BH2",
+        "descricao": "Selecione 2 tool do baralho e coloque-o na mão",
+        "photo": "imagens/T007.png"
+    },
+    {
+        "type": "Tool",
+        "idCard": "T008",
+        "name": "Deslacramento Discard",
+        "effect": "kaifuu-DH1",
+        "descricao": "Selecione 1 tool do descarte e coloque-o na mão",
+        "photo": "imagens/T008.png"
+    },
+    {
+        "type": "Tool",
+        "idCard": "T009",
+        "name": "Deslacramento Discard",
+        "effect": "kaifuu-DH2",
+        "descricao": "Selecione 2 tool do descarte e coloque-o na mão",
+        "photo": "imagens/T009.png"
+    },
+    {
+        "type": "Tool",
+        "idCard": "T010",
+        "name": "Reunir Chakra",
+        "effect": "chakra-BH1",
+        "descricao": "Selecione 1 chakra do baralho e coloque-o na mão",
+        "photo": "imagens/T010.png"
+    },
+    {
+        "type": "Tool",
+        "idCard": "T011",
+        "name": "Reunir Chakra",
+        "effect": "chakra-BH2",
+        "descricao": "Selecione 2 chakra do baralho e coloque-o na mão",
+        "photo": "imagens/T011.png"
+    },
+    {
+        "type": "Tool",
+        "idCard": "T012",
+        "name": "Reunir Chakra",
+        "effect": "chakra-DH2",
+        "descricao": "Selecione 2 chakra do descarte e coloque-o na mão",
+        "photo": "imagens/T012.png"
+    },
+    {
+        "type": "Tool",
+        "idCard": "T013",
+        "name": "Reunir Chakra",
+        "effect": "chakra-DH4",
+        "descricao": "Selecione 4 chakra do descarte e coloque-o na mão",
+        "photo": "imagens/T013.png"
+    },
+    {
+        "type": "Tool",
+        "idCard": "T014",
+        "name": "Tonton",
+        "effect": "buy3",
+        "descricao": "Compre 3 cards",
+        "photo": "imagens/T014.png"
+    },
+    {
+        "type": "Tool",
+        "idCard": "T015",
+        "name": "Bomba de Fumaça",
+        "effect": "trocarH-5",
+        "descricao": "Coloque sua mão no seu baralho, embaralhe e compre 5 cards",
+        "photo": "imagens/T015.png"
+    },
+    {
+        "type": "Tool",
+        "idCard": "T016",
+        "name": "Bashosen",
+        "effect": "trocar2H-5",
+        "descricao": "Ambos colocam a sua mão no seu baralho, embaralham e compram 5 cards",
+        "photo": "imagens/T016.png"
+    },
+    {
+        "type": "Tool",
+        "idCard": "T017",
+        "name": "Shield",
+        "effect": "aumentaDef20",
+        "descricao": "Aumenta defesa em 20",
+        "photo": "imagens/T017.png"
+    },
+    {
+        "type": "Tool",
+        "idCard": "T018",
+        "name": "Kunai e Shuriken",
+        "effect": "aumentaTai20",
+        "descricao": "Aumenta taijutsu em 20",
+        "photo": "imagens/T018.png"
+    },
+    {
+        "type": "Tool",
+        "idCard": "T019",
+        "name": "Controle de Chakra Ninjutsu",
+        "effect": "aumentaNin20",
+        "descricao": "Aumenta ninjutsu em 20",
+        "photo": "imagens/T019.png"
+    },
+    {
+        "type": "Tool",
+        "idCard": "T020",
+        "name": "Controle de Chakra Genjutsu",
+        "effect": "aumentaGen20",
+        "descricao": "Aumenta genjutsu em 20",
+        "photo": "imagens/T020.png"
+    },
+    {
+        "type": "Tool",
+        "idCard": "T021",
+        "name": "Pilula de Chakra",
+        "effect": "aumentaChk20",
+        "descricao": "Aumenta chakra em 20",
+        "photo": "imagens/T021.png"
+    },
+    {
+        "type": "Tool",
+        "idCard": "T022",
+        "name": "Liberação de Peso",
+        "effect": "aumentaSpd20",
+        "descricao": "Aumenta velocidade em 20",
+        "photo": "imagens/T022.png"
+    },
+    {
+        "type": "Tool",
+        "idCard": "T023",
+        "name": "Tensei",
+        "effect": "edoTensei-H",
+        "descricao": "Selecione um ninja do descarte e coloque-o na mão",
+        "photo": "imagens/T001.png"
+    },
+    {
+        "type": "Tool",
+        "idCard": "T024",
+        "name": "Invocar Ninja",
+        "effect": "kuchiyoseN1-1",
+        "descricao": "Selecione 1 ninja estagio 1 do baralho e coloque-o na mão",
+        "photo": "imagens/T002.png"
+    },
+    {
+        "type": "Tool",
+        "idCard": "T025",
+        "name": "Invocar Ninja",
+        "effect": "kuchiyoseN1-2",
+        "descricao": "Selecione 2 ninjas estagio 1 do baralho e coloque-o na mão",
+        "photo": "imagens/T003.png"
+    },
+    {
+        "type": "Tool",
+        "idCard": "T026",
+        "name": "Invocar Ninja",
+        "effect": "kuchiyoseN2-1",
+        "descricao": "Selecione 1 ninja estagio 2 ou 3 do baralho e coloque-o na mão",
+        "photo": "imagens/T004.png"
+    },
+    {
+        "type": "Tool",
+        "idCard": "T027",
+        "name": "Invocar Ninja",
+        "effect": "kuchiyoseN2-2",
+        "descricao": "Selecione 2 ninjas estagio 2 ou 3 do baralho e coloque-o na mão",
+        "photo": "imagens/T005.png"
+    },
+    {
+        "type": "Tool",
+        "idCard": "T028",
+        "name": "Deslacramento Deck",
+        "effect": "kaifuu-BH1",
+        "descricao": "Selecione 1 tool do baralho e coloque-o na mão",
+        "photo": "imagens/T006.png"
+    },
+    {
+        "type": "Tool",
+        "idCard": "T029",
+        "name": "Deslacramento Deck",
+        "effect": "kaifuu-BH2",
+        "descricao": "Selecione 2 tool do baralho e coloque-o na mão",
+        "photo": "imagens/T007.png"
+    },
+    {
+        "type": "Tool",
+        "idCard": "T030",
+        "name": "Deslacramento Discard",
+        "effect": "kaifuu-DH1",
+        "descricao": "Selecione 1 tool do descarte e coloque-o na mão",
+        "photo": "imagens/T008.png"
+    },
+    {
+        "type": "Tool",
+        "idCard": "T031",
+        "name": "Deslacramento Discard",
+        "effect": "kaifuu-DH2",
+        "descricao": "Selecione 2 tool do descarte e coloque-o na mão",
+        "photo": "imagens/T009.png"
+    },
+    {
+        "type": "Tool",
+        "idCard": "T032",
+        "name": "Reunir Chakra",
+        "effect": "chakra-BH1",
+        "descricao": "Selecione 1 chakra do baralho e coloque-o na mão",
+        "photo": "imagens/T010.png"
+    },
+    {
+        "type": "Tool",
+        "idCard": "T033",
+        "name": "Reunir Chakra",
+        "effect": "chakra-BH2",
+        "descricao": "Selecione 2 chakra do baralho e coloque-o na mão",
+        "photo": "imagens/T011.png"
+    },
+    {
+        "type": "Tool",
+        "idCard": "T034",
+        "name": "Reunir Chakra",
+        "effect": "chakra-DH2",
+        "descricao": "Selecione 2 chakra do descarte e coloque-o na mão",
+        "photo": "imagens/T012.png"
+    },
+    {
+        "type": "Tool",
+        "idCard": "T035",
+        "name": "Reunir Chakra",
+        "effect": "chakra-DH4",
+        "descricao": "Selecione 4 chakra do descarte e coloque-o na mão",
+        "photo": "imagens/T013.png"
+    },
+    {
+        "type": "Tool",
+        "idCard": "T036",
+        "name": "Tonton",
+        "effect": "buy3",
+        "descricao": "Compre 3 cards",
+        "photo": "imagens/T014.png"
+    },
+    {
+        "type": "Tool",
+        "idCard": "T037",
+        "name": "Bomba de Fumaça",
+        "effect": "trocarH-5",
+        "descricao": "Coloque sua mão no seu baralho, embaralhe e compre 5 cards",
+        "photo": "imagens/T015.png"
+    },
+    {
+        "type": "Tool",
+        "idCard": "T038",
+        "name": "Bashosen",
+        "effect": "trocar2H-5",
+        "descricao": "Ambos colocam a sua mão no seu baralho, embaralham e compram 5 cards",
+        "photo": "imagens/T016.png"
+    },
+    {
+        "type": "Tool",
+        "idCard": "T039",
+        "name": "Shield",
+        "effect": "aumentaDef20",
+        "descricao": "Aumenta defesa em 20",
+        "photo": "imagens/T017.png"
+    },
+    {
+        "type": "Tool",
+        "idCard": "T040",
+        "name": "Kunai e Shuriken",
+        "effect": "aumentaTai20",
+        "descricao": "Aumenta taijutsu em 20",
+        "photo": "imagens/T018.png"
+    },
+    {
+        "type": "Tool",
+        "idCard": "T041",
+        "name": "Controle de Chakra Ninjutsu",
+        "effect": "aumentaNin20",
+        "descricao": "Aumenta ninjutsu em 20",
+        "photo": "imagens/T019.png"
+    },
+    {
+        "type": "Tool",
+        "idCard": "T042",
+        "name": "Controle de Chakra Genjutsu",
+        "effect": "aumentaGen20",
+        "descricao": "Aumenta genjutsu em 20",
+        "photo": "imagens/T020.png"
+    },
+    {
+        "type": "Tool",
+        "idCard": "T043",
+        "name": "Pilula de Chakra",
+        "effect": "aumentaChk20",
+        "descricao": "Aumenta chakra em 20",
+        "photo": "imagens/T021.png"
+    },
+    {
+        "type": "Tool",
+        "idCard": "T044",
+        "name": "Liberação de Peso",
+        "effect": "aumentaSpd20",
+        "descricao": "Aumenta velocidade em 20",
+        "photo": "imagens/T022.png"
+    },
+    {
+        "type": "Tool",
+        "idCard": "T045",
+        "name": "Support Skill",
+        "effect": "plusSupSkill",
+        "descricao": "Aumenta 2 pontos da habilidade de Suporte",
+        "photo": "imagens/T045.png"
+    },
+    {
+        "type": "Tool",
+        "idCard": "T046",
+        "name": "Kokinjo",
+        "effect": "switchOp",
+        "descricao": "Troque o líder do Oponente",
+        "photo": "imagens/T046.png"
+    }
+]

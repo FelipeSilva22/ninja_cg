@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Cartas</title>
+</head>
+<body>
+    <h2>Gerador de Cartas</h2>
+    <input type="file" id="uploadJson" accept=".json">
+    <select id="selectNinja"></select>
+    <canvas id="cardCanvas" width="472" height="670"></canvas>
+    <button id="downloadBtn">Baixar Imagem</button>
+    
+    <script>
+        let cardData = [];
+        const canvas = document.getElementById('cardCanvas');
+        
+        const borderImages = {
+            "Konoha": "bordas/bordaKonoha.png",
+            "Suna": "bordas/bordaSuna.png",
+            "Kiri": "bordas/bordaKiri.png",
+            "Iwa": "bordas/bordaIwa.png",
+            "Kumo": "bordas/bordaKumo.png",
+            "Oto": "bordas/bordaOto.png",
+            "Ame": "bordas/bordaAme.png",
+            "Akatsuki": "bordas/bordaAkatsuki.png"
+        };
+        
+        // Configuração de posições ajustáveis
+        const layoutConfig = {
+            name: { x: 236, y: 50, font: '24px Arial', color: '#FFF' },
+            stage: { x: 50, y: 60, font: '18px Arial', color: '#FFF' },
+            hp: { x: 20, y: 600, font: '20px Arial', color: '#FFF' },
+            chakra: { x: 20, y: 630, font: '20px Arial', color: '#FFF' }
+        };
+        
+        document.getElementById('uploadJson').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                cardData = JSON.parse(e.target.result);
+                
+                const select = document.getElementById('selectNinja');
+                select.innerHTML = '';
+                cardData.forEach((ninja, index) => {
+                    const option = document.createElement('option');
+                    option.value = index;
+                    option.textContent = ninja.name;
+                    select.appendChild(option);
+                });
+                drawCard(0);
+            };
+            reader.readAsText(file);
+        });
+        
+        document.getElementById('selectNinja').addEventListener('change', function() {
+            drawCard(this.value);
+        });
+        
+        function drawCard(index) {
+            const ninja = cardData[index];
+            if (!ninja) return;
+            
+            const canvas = document.getElementById('cardCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            const adornoImg = new Image();
+            adornoImg.src = "imagens/adorno.png";
+            adornoImg.onload = function() {
+                ctx.drawImage(adornoImg, 0, 0, canvas.width, canvas.height);
+                
+                // Adiciona a faixa preta translúcida no topo
+                ctx.fillStyle = "rgba(0, 0, 0, 0.9)";
+                ctx.fillRect(0, 0, 472, 60);
+                
+                const borderImg = new Image();
+                borderImg.src = borderImages[ninja.gakure] || "bordas/bordaDefault.png";
+                borderImg.onload = function() {
+                    ctx.drawImage(borderImg, 0, 0, canvas.width, canvas.height);
+                    
+                    drawText(ctx, ninja.name, layoutConfig.name, true);
+                    drawText(ctx, `Stage: ${ninja.stage}`, layoutConfig.stage);
+                    drawText(ctx, `HP: ${ninja.hp}`, layoutConfig.hp);
+                    drawText(ctx, `Chakra: ${ninja.chakra}`, layoutConfig.chakra);
+                    
+                    const atributosImg = new Image();
+                    atributosImg.src = "imagens/atributos.png";
+                    atributosImg.onload = function() {
+                        ctx.drawImage(atributosImg, 0, 0, canvas.width, canvas.height);
+                    };
+                };
+            };
+        }
+        document.getElementById('downloadBtn').addEventListener('click', function() {
+        
+            const link = document.createElement('a');
+            link.download = 'carta.png';
+            link.href = canvas.toDataURL("image/png"); // Mantém a transparência
+            link.click();
+        });
+        
+        function drawText(ctx, text, config, center = false) {
+            ctx.fillStyle = config.color;
+            ctx.font = config.font;
+            
+            let x = config.x;
+            if (center) {
+                const textWidth = ctx.measureText(text).width;
+                x = (canvas.width - textWidth) / 2; // Centraliza horizontalmente
+            }
+
+            ctx.fillText(text, x, config.y);
+        }
+
+    </script>
+</body>
+</html>
