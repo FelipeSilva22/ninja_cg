@@ -196,6 +196,7 @@ function acaoPreparacaoIA() {
   // 🔹 Processa Ninjas
   cartasNinja.forEach((card) => {
     const stage = parseInt(card.dataset.stage, 10);
+    console.log(card.id, stage);
     const slotLider = document.getElementById("ia-leader-slot");
 
     if (stage === 1) {

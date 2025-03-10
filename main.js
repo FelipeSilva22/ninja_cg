@@ -15,42 +15,61 @@ const scrolls = [
   { stat: "genjutsu", value: -10, icon: "scroll-Gen.png", type: "penalty" },
   { stat: "ninjutsu", value: -10, icon: "scroll-Nin.png", type: "penalty" },
   { stat: "defense", value: -10, icon: "scroll-Def.png", type: "penalty" },
-  { stat: "speed", value: -10, icon: "scroll-Spd.png", type: "penalty" }
+  { stat: "speed", value: -10, icon: "scroll-Spd.png", type: "penalty" },
 ];
 
-const fases = ["inicio", "formacao", "compra", "preparacao", "suporte", "combate", "novoLider"];
+const fases = [
+  "inicio",
+  "formacao",
+  "compra",
+  "preparacao",
+  "suporte",
+  "combate",
+  "novoLider",
+];
 let estadoAtual = "inicio";
 let jutsusDatabase = []; // Variável global para armazenar os jutsus carregados
 let jogadorMao = []; // Cards na mão do jogador
 let jogadorTime = []; // Cards no campo do jogador
 let iaMao = []; // Cards na mão da IA
 let iaTime = []; // Cards no campo da IA
-let chakraUsado = false;//Controlar uso de chakra por turno
+let chakraUsado = false; //Controlar uso de chakra por turno
 let turnosSemLider = 0; //Controla o empate
 let arrayDescarteIA = [];
 let arrayDescartePlayer = [];
 let currentCardIndex = 0;
 let currentDiscardPile = arrayDescartePlayer;
 let suporteIAExecutado = false; // Variável de controle global
-let jogadorField = []; 
+let jogadorField = [];
 let iaField = [];
 
-function iniciarCampoDeBatalha() { 
+function iniciarCampoDeBatalha() {
   //console.log("Iniciando o campo de batalha...");
-  document.getElementById('player-name-display').innerText = `Time ${jogadorNome}`;
-  document.getElementById('player-name-hand').innerText = `Mão de ${jogadorNome}`;
-  document.getElementById('player-name-deck').innerText = `Deck de ${jogadorNome}`;
-  document.getElementById('player-scroll-count').innerText = jogadorPergaminhos;
-  document.getElementById('ia-scroll-count').innerText = iaPergaminhos;
-  
+  document.getElementById(
+    "player-name-display"
+  ).innerText = `Time ${jogadorNome}`;
+  document.getElementById(
+    "player-name-hand"
+  ).innerText = `Mão de ${jogadorNome}`;
+  document.getElementById(
+    "player-name-deck"
+  ).innerText = `Deck de ${jogadorNome}`;
+  document.getElementById("player-scroll-count").innerText = jogadorPergaminhos;
+  document.getElementById("ia-scroll-count").innerText = iaPergaminhos;
+
   // Inicialização ao carregar a página
   document.addEventListener("DOMContentLoaded", () => {
     atualizarBotoes(); // Configura a aparência inicial dos botões
   });
   document.addEventListener("DOMContentLoaded", () => {
-    gsap.from("#player-area", { duration: 1.5, y: 50, opacity: 0, ease: "power2.out" });
+    gsap.from("#player-area", {
+      duration: 1.5,
+      y: 50,
+      opacity: 0,
+      ease: "power2.out",
+    });
   });
-  
+
   // Inicializa as mãos vazias
   jogadorMao = [];
   iaMao = [];
@@ -68,17 +87,20 @@ function iniciarCampoDeBatalha() {
   embaralharBaralho(iaBaralho.cards);
 
   // Verificar se o baralho foi embaralhado
-  const jogadorEmbaralhado = JSON.stringify(jogadorBaralho.cards) !== JSON.stringify(originalJogadorBaralho);
-  const iaEmbaralhado = JSON.stringify(iaBaralho.cards) !== JSON.stringify(originalIaBaralho);
+  const jogadorEmbaralhado =
+    JSON.stringify(jogadorBaralho.cards) !==
+    JSON.stringify(originalJogadorBaralho);
+  const iaEmbaralhado =
+    JSON.stringify(iaBaralho.cards) !== JSON.stringify(originalIaBaralho);
 
   if (!jogadorEmbaralhado || !iaEmbaralhado) {
-      console.error("Falha no embaralhamento de um ou ambos os baralhos.");
+    console.error("Falha no embaralhamento de um ou ambos os baralhos.");
   }
 
   formarMaoInicial(jogadorBaralho.cards, jogadorMao, iaBaralho.cards, iaMao);
 
   renderizarMao(jogadorMao);
-  
+
   renderizarMaoIA(iaMao);
 
   estadoAtual = "formacao";
@@ -88,17 +110,17 @@ function iniciarCampoDeBatalha() {
 }
 function embaralharBaralho(baralho) {
   if (!Array.isArray(baralho) || baralho.length === 0) {
-      console.error("Baralho inválido para embaralhar:", baralho);
-      return;
+    console.error("Baralho inválido para embaralhar:", baralho);
+    return;
   }
 
   //console.log("Baralho antes do embaralhamento:", JSON.stringify(baralho));
 
   // Implementação de embaralhamento usando Fisher-Yates Shuffle
   for (let i = baralho.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1)); // Índice aleatório de 0 a i
-      [baralho[i], baralho[j]] = [baralho[j], baralho[i]]; // Troca de elementos
-      console.log('Baralho embaralhado.');
+    const j = Math.floor(Math.random() * (i + 1)); // Índice aleatório de 0 a i
+    [baralho[i], baralho[j]] = [baralho[j], baralho[i]]; // Troca de elementos
+    console.log("Baralho embaralhado.");
   }
 
   //console.log("Baralho após o embaralhamento:", JSON.stringify(baralho));
@@ -111,13 +133,13 @@ function formarMaoInicial(baralhoJogador, maoJogador, baralhoIA, maoIA) {
 
   // Função para verificar se uma mão tem pelo menos um Ninja Estágio 1
   function temNinjaEstagio1(mao) {
-      return mao.some(card => card.type === "Ninja" && card.stage === 1);
+    return mao.some((card) => card.type === "Ninja" && card.stage === 1);
   }
 
   // Valida se os baralhos são arrays válidos
   if (!Array.isArray(baralhoJogador) || !Array.isArray(baralhoIA)) {
-      console.error("Os baralhos devem ser arrays válidos.");
-      return;
+    console.error("Os baralhos devem ser arrays válidos.");
+    return;
   }
 
   // Cópias dos baralhos para evitar modificações diretas
@@ -126,45 +148,45 @@ function formarMaoInicial(baralhoJogador, maoJogador, baralhoIA, maoIA) {
 
   // Loop para formar as mãos até que ambas estejam corretas ou atinja o limite de tentativas
   while ((!maoJogadorCompleta || !maoIACompleta) && tentativas < 10) {
-      console.log(`Tentativa ${tentativas + 1}:`);
+    console.log(`Tentativa ${tentativas + 1}:`);
 
-      // Processa a mão do Jogador
-      if (!maoJogadorCompleta) {
-          maoJogador.length = 0; // Limpa a mão anterior
-          maoJogador.push(...copiaBaralhoJogador.splice(0, 7)); // Retira os 5 primeiros cards do baralho
+    // Processa a mão do Jogador
+    if (!maoJogadorCompleta) {
+      maoJogador.length = 0; // Limpa a mão anterior
+      maoJogador.push(...copiaBaralhoJogador.splice(0, 7)); // Retira os 5 primeiros cards do baralho
 
-          if (!temNinjaEstagio1(maoJogador)) {
-              // Devolve os cards ao final do baralho e tenta de novo
-              copiaBaralhoJogador.push(...maoJogador);
-              maoJogador.length = 0;
-          } else {
-              // Se tiver Ninja 1, finaliza a mão
-              maoJogadorCompleta = true;
-          }
+      if (!temNinjaEstagio1(maoJogador)) {
+        // Devolve os cards ao final do baralho e tenta de novo
+        copiaBaralhoJogador.push(...maoJogador);
+        maoJogador.length = 0;
+      } else {
+        // Se tiver Ninja 1, finaliza a mão
+        maoJogadorCompleta = true;
       }
+    }
 
-      // Processa a mão da IA
-      if (!maoIACompleta) {
-          maoIA.length = 0; // Limpa a mão anterior
-          maoIA.push(...copiaBaralhoIA.splice(0, 7)); // Retira os 5 primeiros cards do baralho
+    // Processa a mão da IA
+    if (!maoIACompleta) {
+      maoIA.length = 0; // Limpa a mão anterior
+      maoIA.push(...copiaBaralhoIA.splice(0, 7)); // Retira os 5 primeiros cards do baralho
 
-          if (!temNinjaEstagio1(maoIA)) {
-              // Devolve os cards ao final do baralho e tenta de novo
-              copiaBaralhoIA.push(...maoIA);
-              maoIA.length = 0;
-          } else {
-              // Se tiver Ninja 1, finaliza a mão
-              maoIACompleta = true;
-          }
+      if (!temNinjaEstagio1(maoIA)) {
+        // Devolve os cards ao final do baralho e tenta de novo
+        copiaBaralhoIA.push(...maoIA);
+        maoIA.length = 0;
+      } else {
+        // Se tiver Ninja 1, finaliza a mão
+        maoIACompleta = true;
       }
+    }
 
-      tentativas++; // Incrementa o contador de tentativas
+    tentativas++; // Incrementa o contador de tentativas
   }
 
   // Verificação final para garantir que ambas as mãos estão corretas
   if (!maoJogadorCompleta || !maoIACompleta) {
-      console.error("Não foi possível formar mãos válidas após 20 tentativas.");
-      return;
+    console.error("Não foi possível formar mãos válidas após 20 tentativas.");
+    return;
   }
 
   // Atualiza os baralhos originais com as cópias finais
@@ -181,90 +203,100 @@ function formarMaoInicial(baralhoJogador, maoJogador, baralhoIA, maoIA) {
 }
 
 function renderizarMao(mao) {
-  const maoContainer = document.getElementById('maoJ1');
-  maoContainer.innerHTML = ''; // Limpa a mão antes de renderizar
+  const maoContainer = document.getElementById("maoJ1");
+  maoContainer.innerHTML = ""; // Limpa a mão antes de renderizar
 
   const idsExcluidos = [
-      ...Array.from(document.querySelectorAll('.field-slot img')).map(card => card.id),
-      ...Array.from(document.querySelectorAll('#player-discard-slot img')).map(card => card.id)
+    ...Array.from(document.querySelectorAll(".field-slot img")).map(
+      (card) => card.id
+    ),
+    ...Array.from(document.querySelectorAll("#player-discard-slot img")).map(
+      (card) => card.id
+    ),
   ];
 
-  const cardsNaMao = mao.filter(card => !idsExcluidos.includes(card.idCard));
+  const cardsNaMao = mao.filter((card) => !idsExcluidos.includes(card.idCard));
 
-  cardsNaMao.forEach(card => {
-      const cardElement = document.createElement('img');
-      cardElement.src = card.photo;
-      cardElement.alt = card.name || 'Card';
-      cardElement.id = card.idCard;
-      cardElement.classList.add('hand-card');
-      cardElement.draggable = true; // Habilita o drag and drop
-      cardElement.addEventListener('dragstart', dragStartHandler);
-      cardElement.dataset.jogador = "J1"; // ✅ Definindo dono do card
+  cardsNaMao.forEach((card) => {
+    const cardElement = document.createElement("img");
+    cardElement.src = card.photo;
+    cardElement.alt = card.name || "Card";
+    cardElement.id = card.idCard;
+    cardElement.classList.add("hand-card");
+    cardElement.draggable = true; // Habilita o drag and drop
+    cardElement.addEventListener("dragstart", dragStartHandler);
+    cardElement.dataset.jogador = "J1"; // ✅ Definindo dono do card
 
-      if (card.type === 'Ninja') {
-          Object.assign(cardElement.dataset, {
-              type: card.type,
-              idCard: card.idCard,
-              regN: card.regN,
-              name: card.name,
-              stage: card.stage || 1,
-              bloqEvo: card.stage || 1,
-              hpInicial: card.hp || 0,
-              chakraInicial: card.chakra || 0,
-              hp: card.hp || 0,
-              chakra: card.chakra || 0,
-              taijutsu: card.taijutsu || 0,
-              genjutsu: card.genjutsu || 0,
-              ninjutsu: card.ninjutsu || 0,
-              defense: card.defense || 0,
-              speed: card.speed || 0,
-              katon: card.katon || 0,
-              fuuton: card.fuuton || 0,
-              raiton: card.raiton || 0,
-              doton: card.doton || 0,
-              suiton: card.suiton || 0,
-              katonOriginal: card.katon || 0,
-              fuutonOriginal: card.fuuton || 0,
-              raitonOriginal: card.raiton || 0,
-              dotonOriginal: card.doton || 0,
-              suitonOriginal: card.suiton || 0,
-              supSkill: card.supSkill || null,
-              costSupSkill: card.costSupSkill || 0,
-              chanceSkill: card.chanceSkill || 0,
-              jutsus: JSON.stringify(card.jutsus || [])
-          });
-      } else if (card.type === 'Tool') {
-          Object.assign(cardElement.dataset, {
-              type: card.type,
-              effect: typeof card.effect === 'string' ? card.effect : JSON.stringify(card.effect || '')
-          });
-      } else if (card.type === 'Chakra') {
-          Object.assign(cardElement.dataset, {
-              type: card.type,
-              effect: typeof card.effect === 'string' ? card.effect : JSON.stringify(card.effect || ''),
-              natureChakra: card.natureChakra || "Nenhum" // ✅ Adicionando atributo natureChakra
-          });
-      }
+    if (card.type === "Ninja") {
+      Object.assign(cardElement.dataset, {
+        type: card.type,
+        idCard: card.idCard,
+        regN: card.regN,
+        name: card.name,
+        stage: card.stage || 1,
+        bloqEvo: card.stage || 1,
+        hpInicial: card.hp || 0,
+        chakraInicial: card.chakra || 0,
+        hp: card.hp || 0,
+        chakra: card.chakra || 0,
+        taijutsu: card.taijutsu || 0,
+        genjutsu: card.genjutsu || 0,
+        ninjutsu: card.ninjutsu || 0,
+        defense: card.defense || 0,
+        speed: card.speed || 0,
+        katon: card.katon || 0,
+        fuuton: card.fuuton || 0,
+        raiton: card.raiton || 0,
+        doton: card.doton || 0,
+        suiton: card.suiton || 0,
+        katonOriginal: card.katon || 0,
+        fuutonOriginal: card.fuuton || 0,
+        raitonOriginal: card.raiton || 0,
+        dotonOriginal: card.doton || 0,
+        suitonOriginal: card.suiton || 0,
+        supSkill: card.supSkill || null,
+        costSupSkill: card.costSupSkill || 0,
+        chanceSkill: card.chanceSkill || 0,
+        jutsus: JSON.stringify(card.jutsus || []),
+      });
+    } else if (card.type === "Tool") {
+      Object.assign(cardElement.dataset, {
+        type: card.type,
+        effect:
+          typeof card.effect === "string"
+            ? card.effect
+            : JSON.stringify(card.effect || ""),
+      });
+    } else if (card.type === "Chakra") {
+      Object.assign(cardElement.dataset, {
+        type: card.type,
+        effect:
+          typeof card.effect === "string"
+            ? card.effect
+            : JSON.stringify(card.effect || ""),
+        natureChakra: card.natureChakra || "Nenhum", // ✅ Adicionando atributo natureChakra
+      });
+    }
 
-      maoContainer.appendChild(cardElement);
+    maoContainer.appendChild(cardElement);
   });
 }
 function renderizarMaoIA(maoIA) {
-  const maoContainerIA = document.getElementById('maoIA');
+  const maoContainerIA = document.getElementById("maoIA");
 
   if (!maoContainerIA) {
-      console.error("❌ Erro: Elemento 'maoIA' não encontrado no DOM.");
-      return;
+    console.error("❌ Erro: Elemento 'maoIA' não encontrado no DOM.");
+    return;
   }
 
   if (!Array.isArray(maoIA) || maoIA.length === 0) {
-      console.warn("⚠️ A mão da IA está vazia ou não é um array válido.");
-      //maoContainerIA.innerHTML = "<p class='empty-hand'>IA sem cartas na mão</p>";
-      return;
+    console.warn("⚠️ A mão da IA está vazia ou não é um array válido.");
+    //maoContainerIA.innerHTML = "<p class='empty-hand'>IA sem cartas na mão</p>";
+    return;
   }
 
   console.log(`🎴 Renderizando ${maoIA.length} cards na mão da IA...`);
-/*
+  /*
   // 🔹 Captura IDs já usados no campo ou descarte
   const idsExcluidosIA = [
       ...Array.from(document.querySelectorAll('.field-slot img')).map(card => card.id),
@@ -277,69 +309,74 @@ function renderizarMaoIA(maoIA) {
   console.log("📌 cardsNaMaoIA depois da filtragem:", cardsNaMaoIA);
 */
   // 🔹 Limpa a área antes de renderizar
-  maoContainerIA.innerHTML = '';
+  maoContainerIA.innerHTML = "";
 
   maoIA.forEach((card) => {
-      if (!card || !card.idCard) {
-          console.warn("⚠️ Card inválido encontrado na mão da IA:", card);
-          return;
-      }
+    if (!card || !card.idCard) {
+      console.warn("⚠️ Card inválido encontrado na mão da IA:", card);
+      return;
+    }
 
-      const cardElement = document.createElement('img');
-      cardElement.src = card.photo || "imagens/card_placeholder.png";
-      cardElement.alt = card.name || 'Card da IA';
-      cardElement.id = card.idCard;
-      cardElement.classList.add('hand-card-ia');
-      cardElement.draggable = false;
-      cardElement.dataset.jogador = "IA";
+    const cardElement = document.createElement("img");
+    cardElement.src = card.photo || "imagens/card_placeholder.png";
+    cardElement.alt = card.name || "Card da IA";
+    cardElement.id = card.idCard;
+    cardElement.classList.add("hand-card-ia");
+    cardElement.draggable = false;
+    cardElement.dataset.jogador = "IA";
 
-      // 🔹 Garantia de que o ID está correto
-      //console.log(`🃏 Criando card ${card.name || "Desconhecido"} com id: ${card.idCard}`);
+    // 🔹 Garantia de que o ID está correto
+    //console.log(`🃏 Criando card ${card.name || "Desconhecido"} com id: ${card.idCard}`);
 
-      // Define os atributos do card dependendo do tipo
-      if (card.tipo === 'Ninja') {
-        Object.assign(cardElement.dataset, {
-          type: card.type,
-          idCard: card.idCard,
-          regN: card.regN,
-          name: card.name,
-          stage: card.stage || 1,
-          hpInicial: card.hp || 0,
-          chakraInicial: card.chakra || 0,
-          hp: card.hp || 0,
-          chakra: card.chakra || 0,
-          taijutsu: card.taijutsu || 0,
-          genjutsu: card.genjutsu || 0,
-          ninjutsu: card.ninjutsu || 0,
-          defense: card.defense || 0,
-          speed: card.speed || 0,
-          katon: card.katon || 0,
-          fuuton: card.fuuton || 0,
-          raiton: card.raiton || 0,
-          doton: card.doton || 0,
-          suiton: card.suiton || 0,
-          katonOriginal: card.katonOriginal || card.katon || 0,
-          fuutonOriginal: card.fuutonOriginal || card.fuuton || 0,
-          raitonOriginal: card.raitonOriginal || card.raiton || 0,
-          dotonOriginal: card.dotonOriginal || card.doton || 0,
-          suitonOriginal: card.suitonOriginal || card.suiton || 0,
-          supSkill: card.supSkill || null,
-          costSupSkill: card.costSupSkill || 0,
-          chanceSkill: card.chanceSkill || 0,
-          jutsus: JSON.stringify(card.jutsus || [])
-        });
-
-      } else if (card.type === 'Tool') {
-        Object.assign(cardElement.dataset, {
-            type: card.type,
-            effect: typeof card.effect === 'string' ? card.effect : JSON.stringify(card.effect || '')
-        });
-    } else if (card.type === 'Chakra') {
-        Object.assign(cardElement.dataset, {
-            type: card.type,
-            effect: typeof card.effect === 'string' ? card.effect : JSON.stringify(card.effect || ''),
-            natureChakra: card.natureChakra || "Nenhum" // ✅ Adicionando atributo natureChakra
-        });
+    // Define os atributos do card dependendo do tipo
+    if (card.type === "Ninja") {
+      Object.assign(cardElement.dataset, {
+        type: card.type,
+        idCard: card.idCard,
+        regN: card.regN,
+        name: card.name,
+        stage: card.stage || 1,
+        hpInicial: card.hp || 0,
+        chakraInicial: card.chakra || 0,
+        hp: card.hp || 0,
+        chakra: card.chakra || 0,
+        taijutsu: card.taijutsu || 0,
+        genjutsu: card.genjutsu || 0,
+        ninjutsu: card.ninjutsu || 0,
+        defense: card.defense || 0,
+        speed: card.speed || 0,
+        katon: card.katon || 0,
+        fuuton: card.fuuton || 0,
+        raiton: card.raiton || 0,
+        doton: card.doton || 0,
+        suiton: card.suiton || 0,
+        katonOriginal: card.katonOriginal || card.katon || 0,
+        fuutonOriginal: card.fuutonOriginal || card.fuuton || 0,
+        raitonOriginal: card.raitonOriginal || card.raiton || 0,
+        dotonOriginal: card.dotonOriginal || card.doton || 0,
+        suitonOriginal: card.suitonOriginal || card.suiton || 0,
+        supSkill: card.supSkill || null,
+        costSupSkill: card.costSupSkill || 0,
+        chanceSkill: card.chanceSkill || 0,
+        jutsus: JSON.stringify(card.jutsus || []),
+      });
+    } else if (card.type === "Tool") {
+      Object.assign(cardElement.dataset, {
+        type: card.type,
+        effect:
+          typeof card.effect === "string"
+            ? card.effect
+            : JSON.stringify(card.effect || ""),
+      });
+    } else if (card.type === "Chakra") {
+      Object.assign(cardElement.dataset, {
+        type: card.type,
+        effect:
+          typeof card.effect === "string"
+            ? card.effect
+            : JSON.stringify(card.effect || ""),
+        natureChakra: card.natureChakra || "Nenhum", // ✅ Adicionando atributo natureChakra
+      });
     }
     // 🔹 Adiciona o card à mão da IA
     maoContainerIA.appendChild(cardElement);
@@ -355,27 +392,27 @@ function restaurarImagemCard(card) {
 
 function encerrarFormacao() {
   //console.log("Encerrando fase de formação...");
- 
+
   // Recupera o líder do jogador
-  const playerLeaderSlot = document.getElementById('player-leader-slot');
-  const leaderCard = playerLeaderSlot.querySelector('img');
+  const playerLeaderSlot = document.getElementById("player-leader-slot");
+  const leaderCard = playerLeaderSlot.querySelector("img");
 
   // Verifica se o card do líder é um Ninja Estágio 1
   if (leaderCard) {
-    const leaderType = leaderCard.getAttribute('data-type'); // Usa getAttribute para acessar atributos
-    const leaderStage = parseInt(leaderCard.getAttribute('data-stage'), 10);
-/*
+    const leaderType = leaderCard.getAttribute("data-type"); // Usa getAttribute para acessar atributos
+    const leaderStage = parseInt(leaderCard.getAttribute("data-stage"), 10);
+    /*
     console.log(`Líder no slot encontrado:`, leaderCard);
     console.log(`Tipo do líder: ${leaderType}`);
     console.log(`Estágio do líder: ${leaderStage}`);
 */
     if (leaderType === "Ninja" && leaderStage === 1) {
       alert("Formação do time concluída!");
-      
+
       // Adiciona a variável bloqEvo aos cards no campo
-      const allCardsInField = document.querySelectorAll('.field-slot img');
-      allCardsInField.forEach(card => {
-        card.setAttribute('data-bloq-evo', '0'); // Bloqueia a evolução inicialmente
+      const allCardsInField = document.querySelectorAll(".field-slot img");
+      allCardsInField.forEach((card) => {
+        card.setAttribute("data-bloq-evo", "0"); // Bloqueia a evolução inicialmente
       });
       // Inicia a escolha do time pela IA
       escolherTimeIA();
@@ -396,29 +433,29 @@ function turnoDeCompraIA() {
   const maoIA = iaMao;
 
   if (deckIA.length > 2) {
-      const comprado = comprarCard(deckIA, maoIA, 'ia-deck-slot');
-      if (comprado) {
-          renderizarMaoIA(maoIA); // Atualiza a mão da IA
-      }
-      console.log("A IA comprou 1 card do deck");
-      turnoDeCompraJ1();
+    const comprado = comprarCard(deckIA, maoIA, "ia-deck-slot");
+    if (comprado) {
+      renderizarMaoIA(maoIA); // Atualiza a mão da IA
+    }
+    console.log("A IA comprou 1 card do deck");
+    turnoDeCompraJ1();
   } else if (deckIA.length === 2) {
-      const comprado = comprarCard(deckIA, maoIA, 'ia-deck-slot');
-      if (comprado) {
-          renderizarMaoIA(maoIA); // Atualiza a mão da IA
-      }
-      alert("A IA só possui mais 1 card no deck");
-      turnoDeCompraJ1();
+    const comprado = comprarCard(deckIA, maoIA, "ia-deck-slot");
+    if (comprado) {
+      renderizarMaoIA(maoIA); // Atualiza a mão da IA
+    }
+    alert("A IA só possui mais 1 card no deck");
+    turnoDeCompraJ1();
   } else if (deckIA.length === 1) {
-      const comprado = comprarCard(deckIA, maoIA, 'ia-deck-slot');
-      if (comprado) {
-          renderizarMaoIA(maoIA); // Atualiza a mão da IA
-      }
-      alert("IA não possui mais cards no deck");
-      turnoDeCompraJ1();
+    const comprado = comprarCard(deckIA, maoIA, "ia-deck-slot");
+    if (comprado) {
+      renderizarMaoIA(maoIA); // Atualiza a mão da IA
+    }
+    alert("IA não possui mais cards no deck");
+    turnoDeCompraJ1();
   } else {
-      alert("IA não pode comprar: deck vazio");
-      turnoDeCompraJ1();
+    alert("IA não pode comprar: deck vazio");
+    turnoDeCompraJ1();
   }
 }
 function turnoDeCompraJ1() {
@@ -429,29 +466,29 @@ function turnoDeCompraJ1() {
   const maoJ1 = jogadorMao;
 
   if (deckJ1.length > 2) {
-      const comprado = comprarCard(deckJ1, maoJ1, 'player-deck-slot');
-      if (comprado) {
-          renderizarMao(maoJ1); // Atualiza a mão do jogador
-      }
-      console.log(`${jogadorNome} comprou 1 card do deck`);
-      encerrarTurno();
+    const comprado = comprarCard(deckJ1, maoJ1, "player-deck-slot");
+    if (comprado) {
+      renderizarMao(maoJ1); // Atualiza a mão do jogador
+    }
+    console.log(`${jogadorNome} comprou 1 card do deck`);
+    encerrarTurno();
   } else if (deckJ1.length === 2) {
-      const comprado = comprarCard(deckJ1, maoJ1, 'player-deck-slot');
-      if (comprado) {
-          renderizarMao(maoJ1); // Atualiza a mão do jogador
-      }
-      alert(`${jogadorNome} só possui mais 1 card no deck`);
-      encerrarTurno();
+    const comprado = comprarCard(deckJ1, maoJ1, "player-deck-slot");
+    if (comprado) {
+      renderizarMao(maoJ1); // Atualiza a mão do jogador
+    }
+    alert(`${jogadorNome} só possui mais 1 card no deck`);
+    encerrarTurno();
   } else if (deckJ1.length === 1) {
-      const comprado = comprarCard(deckJ1, maoJ1, 'player-deck-slot');
-      if (comprado) {
-          renderizarMao(maoJ1); // Atualiza a mão do jogador
-      }
-      alert(`${jogadorNome} não possui mais cards no deck`);
-      encerrarTurno();
+    const comprado = comprarCard(deckJ1, maoJ1, "player-deck-slot");
+    if (comprado) {
+      renderizarMao(maoJ1); // Atualiza a mão do jogador
+    }
+    alert(`${jogadorNome} não possui mais cards no deck`);
+    encerrarTurno();
   } else {
-      alert(`${jogadorNome} não pode comprar: deck vazio`);
-      encerrarTurno();
+    alert(`${jogadorNome} não pode comprar: deck vazio`);
+    encerrarTurno();
   }
 }
 // Função para adicionar um card na mão e remover do deck
@@ -459,25 +496,29 @@ function comprarCard(deck, mao, deckSlotId) {
   if (deck.length === 0) return null; // Sem cards no deck
 
   if (!Array.isArray(mao)) {
-      console.error("Erro: mao não é um array válido em comprarCard(). Redefinindo...");
-      mao = [];
+    console.error(
+      "Erro: mao não é um array válido em comprarCard(). Redefinindo..."
+    );
+    mao = [];
   }
 
   const card = deck.shift(); // Remove o card do topo do deck
-  const isCardInField = Array.from(document.querySelectorAll('.field-slot img')).some(
-      fieldCard => fieldCard.id === card.idCard
-  );
+  const isCardInField = Array.from(
+    document.querySelectorAll(".field-slot img")
+  ).some((fieldCard) => fieldCard.id === card.idCard);
 
   if (!isCardInField) {
-      mao.push(card); // Adiciona na mão se o card não estiver no campo
+    mao.push(card); // Adiciona na mão se o card não estiver no campo
   } else {
-      console.warn(`Card ${card.idCard} já está no campo, não será adicionado à mão.`);
+    console.warn(
+      `Card ${card.idCard} já está no campo, não será adicionado à mão.`
+    );
   }
 
   // Atualiza a photo do deck
   const deckSlot = document.getElementById(deckSlotId);
   if (deck.length === 0) {
-      deckSlot.innerHTML = ''; // Remove a photo se o deck está vazio
+    deckSlot.innerHTML = ""; // Remove a photo se o deck está vazio
   }
 
   return card;
@@ -490,20 +531,22 @@ function turnoDePreparacao() {
   //console.log("Fase:",estadoAtual);
   incrementarBloqEvo(); // Incrementa bloqEvo
   atualizarBotoes(); // Atualiza os botões novamente
-  configurarEventosDeDuploClique();//Ativa ver cards da IA
+  configurarEventosDeDuploClique(); //Ativa ver cards da IA
   initializeDragAndDrop();
 }
 function encerrarPreparacao() {
   if (estadoAtual !== "preparacaoIA") {
-      alert("Você só pode encerrar o turno durante a preparação!");
-      return;
+    alert("Você só pode encerrar o turno durante a preparação!");
+    return;
   }
   console.log("Finalizando turno de preparação...");
   chakraUsado = false; // Reseta o controle de uso de Chakra
   // Reseta o uso de Tools em todos os ninjas no campo
-  const ninjasNoCampo = document.querySelectorAll('.field-slot img[data-type="Ninja"]');
-  ninjasNoCampo.forEach(ninja => {
-      ninja.dataset.toolUsado = "false";
+  const ninjasNoCampo = document.querySelectorAll(
+    '.field-slot img[data-type="Ninja"]'
+  );
+  ninjasNoCampo.forEach((ninja) => {
+    ninja.dataset.toolUsado = "false";
   });
   estadoAtual = "suporte";
   decidirOrdemHabilidadesSuporte();
@@ -532,11 +575,15 @@ function encerrarTurno() {
   } else if (estadoAtual === "suporte") {
     console.log("Encerrando Suporte");
     if (!suporteIAExecutado) {
-      console.log("IA ainda não executou as habilidades de suporte. Iniciando...");
+      console.log(
+        "IA ainda não executou as habilidades de suporte. Iniciando..."
+      );
       escolherHabilidadesSuporteIA();
       encerrarTurno();
     } else {
-      console.log("IA já executou as habilidades de suporte. Avançando para a fase de combate...");
+      console.log(
+        "IA já executou as habilidades de suporte. Avançando para a fase de combate..."
+      );
       estadoAtual = "combate";
       iniciarTurnoCombate();
     }
@@ -548,19 +595,22 @@ function encerrarTurno() {
     estadoAtual = "premio"; // Transição para a fase de prêmio
     encerrarTurno(); // Função específica para encerrar combate
   } else if (estadoAtual === "premio" || estadoAtual === "liderAusente") {
-    console.log("Turno de prêmio encerrado!");    
+    console.log("Turno de prêmio encerrado!");
     // Reseta a marcação de habilidade usada e limpa a marcação de paralyze para todos os ninjas no campo
     const todosNinjasCampo = document.querySelectorAll(".field-slot img");
-    todosNinjasCampo.forEach(ninja => {
-        if (ninja.dataset.habUsada === "true") {
-            ninja.dataset.habUsada = "false";
-            console.log(`Resetando habilidade usada para o ninja ${ninja.dataset.name}.`);
-        }
-        if (ninja.dataset.paralyze === "true") {
-            ninja.dataset.paralyze = "false";
-            console.log(`Removendo Paralyze do ninja ${ninja.dataset.name}.`);
-            ninja.dataset.speed = ninja.dataset.speedOriginal || ninja.dataset.speed; // Restaura a speed original, se aplicável
-        }
+    todosNinjasCampo.forEach((ninja) => {
+      if (ninja.dataset.habUsada === "true") {
+        ninja.dataset.habUsada = "false";
+        console.log(
+          `Resetando habilidade usada para o ninja ${ninja.dataset.name}.`
+        );
+      }
+      if (ninja.dataset.paralyze === "true") {
+        ninja.dataset.paralyze = "false";
+        console.log(`Removendo Paralyze do ninja ${ninja.dataset.name}.`);
+        ninja.dataset.speed =
+          ninja.dataset.speedOriginal || ninja.dataset.speed; // Restaura a speed original, se aplicável
+      }
     });
 
     estadoAtual = "compra";
@@ -572,7 +622,6 @@ function encerrarTurno() {
 
   // Atualiza os botões após a mudança de estado
   atualizarBotoes();
-
 }
 // Função de clique para os botões
 function handleClick(novoEstado) {
@@ -612,7 +661,9 @@ function handleClick(novoEstado) {
 
 // Manipular o botão de desistência
 document.getElementById("btn-desistir").addEventListener("click", () => {
-  const confirmar = confirm("Você tem certeza que deseja desistir? A IA será declarada vencedora.");
+  const confirmar = confirm(
+    "Você tem certeza que deseja desistir? A IA será declarada vencedora."
+  );
   if (confirmar) {
     declararVitoriaIA();
   }
@@ -620,7 +671,11 @@ document.getElementById("btn-desistir").addEventListener("click", () => {
 
 // Manipular o botão de próxima fase
 document.getElementById("btn-proxima-fase").addEventListener("click", () => {
-  const confirmar = confirm(`Deseja encerrar a fase "${traduzirFase(estadoAtual)}" e avançar para a próxima?`);
+  const confirmar = confirm(
+    `Deseja encerrar a fase "${traduzirFase(
+      estadoAtual
+    )}" e avançar para a próxima?`
+  );
   if (confirmar) {
     encerrarTurno();
   }
@@ -635,7 +690,7 @@ function traduzirFase(fase) {
     preparacao: "Equipando Time",
     suporte: "Hab. de Suporte",
     combate: "Ações de Combate",
-    novoLider: "Escolher Novo Líder"
+    novoLider: "Escolher Novo Líder",
   };
   return traducoes[fase] || fase;
 }
@@ -654,78 +709,97 @@ function iniciarTurnoCombate() {
 
   // Reduz HP dos ninjas com a marcação de Poising
   const todosNinjas = document.querySelectorAll(".field-slot img");
-  todosNinjas.forEach(ninja => {
+  todosNinjas.forEach((ninja) => {
     if (ninja.dataset.poising === "true") {
-        const hpAtual = parseInt(ninja.dataset.hp, 10);
-        const hpInicial = parseInt(ninja.dataset.hpInicial, 10);
+      const hpAtual = parseInt(ninja.dataset.hp, 10);
+      const hpInicial = parseInt(ninja.dataset.hpInicial, 10);
 
-        if (hpAtual > 0) {
-            const reducao = Math.ceil(hpInicial * 0.1); // 10% do HP inicial
-            ninja.dataset.hp = Math.max(0, hpAtual - reducao); // Garante que o HP não fique negativo
-            console.log(`Ninja ${ninja.dataset.name} com Poising: HP reduzido em ${reducao}. HP atual: ${ninja.dataset.hp}`);
+      if (hpAtual > 0) {
+        const reducao = Math.ceil(hpInicial * 0.1); // 10% do HP inicial
+        ninja.dataset.hp = Math.max(0, hpAtual - reducao); // Garante que o HP não fique negativo
+        console.log(
+          `Ninja ${ninja.dataset.name} com Poising: HP reduzido em ${reducao}. HP atual: ${ninja.dataset.hp}`
+        );
 
-            // Atualiza atributos se o ninja for o líder
-            if (ninja.closest("#player-leader-slot")) {
-                console.log(`Atualizando atributos do líder do jogador devido ao Poising.`);
-                atualizarAtributosLider(ninja);
-            } else if (ninja.closest("#ia-leader-slot")) {
-                console.log(`Atualizando atributos do líder da IA devido ao Poising.`);
-                atualizarAtributosLiderIA(ninja);
-            }
-
-            // Remove o ninja do campo se ele foi derrotado
-            if (parseInt(ninja.dataset.hp, 10) === 0) {
-                console.log(`Ninja ${ninja.dataset.name} foi derrotado devido ao effect de Poising.`);
-                adicionarAoDescarte(ninja); // Função para remover o ninja do campo
-            }
+        // Atualiza atributos se o ninja for o líder
+        if (ninja.closest("#player-leader-slot")) {
+          console.log(
+            `Atualizando atributos do líder do jogador devido ao Poising.`
+          );
+          atualizarAtributosLider(ninja);
+        } else if (ninja.closest("#ia-leader-slot")) {
+          console.log(
+            `Atualizando atributos do líder da IA devido ao Poising.`
+          );
+          atualizarAtributosLiderIA(ninja);
         }
+
+        // Remove o ninja do campo se ele foi derrotado
+        if (parseInt(ninja.dataset.hp, 10) === 0) {
+          console.log(
+            `Ninja ${ninja.dataset.name} foi derrotado devido ao effect de Poising.`
+          );
+          adicionarAoDescarte(ninja); // Função para remover o ninja do campo
+        }
+      }
     }
   });
-
 
   const liderJogador = document.querySelector("#player-leader-slot img");
   const liderIA = document.querySelector("#ia-leader-slot img");
 
-  console.log("Líder Atual IA:", liderIA ? liderIA.dataset.name : "Não encontrado");
-  console.log("Líder Atual Jogador:", liderJogador ? liderJogador.dataset.name : "Não encontrado");
+  console.log(
+    "Líder Atual IA:",
+    liderIA ? liderIA.dataset.name : "Não encontrado"
+  );
+  console.log(
+    "Líder Atual Jogador:",
+    liderJogador ? liderJogador.dataset.name : "Não encontrado"
+  );
 
   if (!liderJogador && !liderIA) {
-      console.log("Ambos os slots de líder estão vazios.");
-      turnosSemLider++;
-      if (turnosSemLider >= 3) {
-          acordoPaz();
-      } else {
-          encerrarTurno();
-      }
-      return;
+    console.log("Ambos os slots de líder estão vazios.");
+    turnosSemLider++;
+    if (turnosSemLider >= 3) {
+      acordoPaz();
+    } else {
+      encerrarTurno();
+    }
+    return;
   }
 
   if (liderJogador && !liderIA) {
-      console.log("Jogador possui um líder, IA não.");
-      turnosSemLider = 0; // Reseta o contador
-      resgatePremioJ1();
-      return;
+    console.log("Jogador possui um líder, IA não.");
+    turnosSemLider = 0; // Reseta o contador
+    resgatePremioJ1();
+    return;
   }
 
   if (liderIA && !liderJogador) {
-      console.log("IA possui um líder, Jogador não.");
-      turnosSemLider = 0; // Reseta o contador
-      resgatePremioIA();
-      return;
+    console.log("IA possui um líder, Jogador não.");
+    turnosSemLider = 0; // Reseta o contador
+    resgatePremioIA();
+    return;
   }
 
   if (liderJogador && liderIA) {
-      console.log("Ambos os líderes estão presentes.");
-      turnosSemLider = 0; // Reseta o contador
-      atualizarDropdownAcoes();
-      atualizarDropdownAcoesIA();
+    console.log("Ambos os líderes estão presentes.");
+    turnosSemLider = 0; // Reseta o contador
+    atualizarDropdownAcoes();
+    atualizarDropdownAcoesIA();
   }
 }
 
 // 🏆 Verifica a condição de vitória
 function verificarCondicaoVitoria() {
-  const scrollsJ1 = parseInt(document.getElementById("player-scroll-count").textContent, 10);
-  const scrollsIA = parseInt(document.getElementById("ia-scroll-count").textContent, 10);
+  const scrollsJ1 = parseInt(
+    document.getElementById("player-scroll-count").textContent,
+    10
+  );
+  const scrollsIA = parseInt(
+    document.getElementById("ia-scroll-count").textContent,
+    10
+  );
 
   if (scrollsJ1 >= 6) {
     declararVitoriaJ1();
@@ -750,7 +824,8 @@ function resgatePremioJ1() {
   }
 
   adicionarScrollVisual("player-scrolls", scrollSelecionado.icon);
-  playerScrollCount.textContent = parseInt(playerScrollCount.textContent, 10) + 1;
+  playerScrollCount.textContent =
+    parseInt(playerScrollCount.textContent, 10) + 1;
 
   if (!verificarCondicaoVitoria()) {
     // Se ainda não venceu, muda para a fase de escolha do novo líder da IA
@@ -784,16 +859,25 @@ function resgatePremioIA() {
 
 // 📜 Aplica o efeito do scroll a todos os ninjas do time (Líder e Suportes)
 function aplicarEfeitoScrollEquipe(jogador, scroll) {
-  console.log(`📜 Aplicando efeito do scroll ${scroll.stat} (${scroll.value}) para o time ${jogador}`);
+  console.log(
+    `📜 Aplicando efeito do scroll ${scroll.stat} (${scroll.value}) para o time ${jogador}`
+  );
 
-  const ninjas = document.querySelectorAll(`#${jogador === "J1" ? "player" : "ia"}-area img, #${jogador === "J1" ? "player" : "ia"}-supports img`);
-  
-  ninjas.forEach(ninja => aplicarEfeitoScroll(ninja, scroll));
+  const ninjas = document.querySelectorAll(
+    `#${jogador === "J1" ? "player" : "ia"}-area img, #${
+      jogador === "J1" ? "player" : "ia"
+    }-supports img`
+  );
+
+  ninjas.forEach((ninja) => aplicarEfeitoScroll(ninja, scroll));
 
   // ✅ O efeito também precisa ser aplicado a ninjas que ENTREM no campo depois
   document.addEventListener("ninjaAdicionado", (event) => {
     if (event.detail.jogador === jogador) {
-      console.log(`🔄 Aplicando efeito retroativo do scroll em novo ninja do ${jogador}:`, event.detail.ninja);
+      console.log(
+        `🔄 Aplicando efeito retroativo do scroll em novo ninja do ${jogador}:`,
+        event.detail.ninja
+      );
       aplicarEfeitoScroll(event.detail.ninja, scroll);
     }
   });
@@ -802,11 +886,13 @@ function aplicarEfeitoScrollEquipe(jogador, scroll) {
 // ✨ Aplica o efeito do Scroll a um Ninja específico
 function aplicarEfeitoScroll(ninja, scroll) {
   if (!ninja) return;
-  
+
   const statAtual = parseInt(ninja.dataset[scroll.stat] || 0);
   const novoValor = statAtual + scroll.value;
-  
-  console.log(`🔹 ${ninja.dataset.name} teve ${scroll.stat} alterado de ${statAtual} para ${novoValor}`);
+
+  console.log(
+    `🔹 ${ninja.dataset.name} teve ${scroll.stat} alterado de ${statAtual} para ${novoValor}`
+  );
   ninja.dataset[scroll.stat] = novoValor;
 }
 
@@ -839,7 +925,7 @@ function declararVitoriaIA() {
 function escolherNovoLiderJ1() {
   alert("Promova um suporte para ser o lider");
   atualizarBotoes(); // Atualiza os botões novamente
-  configurarEventosDeDuploClique();//Ativa ver cards da IA
+  configurarEventosDeDuploClique(); //Ativa ver cards da IA
   initializeDragAndDrop();
 }
 function acordoPaz() {
@@ -847,26 +933,26 @@ function acordoPaz() {
   // Lógica para acordo de paz
 }
 
-function atualizarDropdownAcoes() { 
+function atualizarDropdownAcoes() {
   const liderAtual = document.querySelector("#player-leader-slot img");
   if (!liderAtual) {
-      console.warn("Nenhum ninja líder está no slot de líder do jogador.");
-      return;
+    console.warn("Nenhum ninja líder está no slot de líder do jogador.");
+    return;
   }
 
-  // Obter os atributos do ninja líder 
-  const taijutsu = parseInt(liderAtual.dataset.taijutsu) || 0; 
-  const defense = parseInt(liderAtual.dataset.defense) || 0;  
-  const speed = parseInt(liderAtual.dataset.speed) || 0;  
+  // Obter os atributos do ninja líder
+  const taijutsu = parseInt(liderAtual.dataset.taijutsu) || 0;
+  const defense = parseInt(liderAtual.dataset.defense) || 0;
+  const speed = parseInt(liderAtual.dataset.speed) || 0;
 
   // Tenta converter os jutsus armazenados no dataset
   let jutsus = [];
   try {
-      jutsus = JSON.parse(liderAtual.dataset.jutsus || "[]");
-      if (!Array.isArray(jutsus)) jutsus = [];
+    jutsus = JSON.parse(liderAtual.dataset.jutsus || "[]");
+    if (!Array.isArray(jutsus)) jutsus = [];
   } catch (error) {
-      console.error("Erro ao carregar jutsus do ninja líder:", error);
-      jutsus = [];
+    console.error("Erro ao carregar jutsus do ninja líder:", error);
+    jutsus = [];
   }
   console.log("Jutsus do líder atual:", jutsus);
 
@@ -880,25 +966,25 @@ function atualizarDropdownAcoes() {
   const opcoesBasicas = [
     { value: "taijutsu", text: `Lançar shuriken/kunai (${taijutsu})` },
     { value: "defense", text: `Proteger-se (${defense})` },
-    { value: "speed", text: `Desviar (${speed})` }
+    { value: "speed", text: `Desviar (${speed})` },
   ];
 
-  opcoesBasicas.forEach(opcao => {
-      const option = document.createElement("option");
-      option.value = opcao.value;
-      option.textContent = opcao.text;
-      if (opcao.value === "taijutsu") {
-          dropdownOfensiva.appendChild(option);
-      } else {
-          dropdownDefensiva.appendChild(option);
-      }
+  opcoesBasicas.forEach((opcao) => {
+    const option = document.createElement("option");
+    option.value = opcao.value;
+    option.textContent = opcao.text;
+    if (opcao.value === "taijutsu") {
+      dropdownOfensiva.appendChild(option);
+    } else {
+      dropdownDefensiva.appendChild(option);
+    }
   });
 
   // Adiciona os jutsus corretamente ao dropdown correspondente
-  jutsus.forEach(jutsu => {
+  jutsus.forEach((jutsu) => {
     if (!jutsu || !jutsu.nameJutsu || !jutsu.usage) {
-        console.warn("⚠️ Jutsu inválido encontrado:", jutsu);
-        return;
+      console.warn("⚠️ Jutsu inválido encontrado:", jutsu);
+      return;
     }
 
     const option = document.createElement("option");
@@ -907,28 +993,27 @@ function atualizarDropdownAcoes() {
 
     // 🔹 Adiciona ao dropdown correto baseado na propriedade 'usage'
     const usage = jutsu.usage.toLowerCase();
-    
+
     if (usage === "of") {
-        dropdownOfensiva.appendChild(option);
+      dropdownOfensiva.appendChild(option);
     }
-    
+
     if (usage === "df" || usage === "ev") {
-        dropdownDefensiva.appendChild(option);
+      dropdownDefensiva.appendChild(option);
     }
     if (usage === "both") {
       dropdownOfensiva.appendChild(option);
       dropdownDefensiva.appendChild(option.cloneNode(true));
-  }
+    }
   });
-
 
   console.log("Dropdowns atualizados com ações do ninja líder.");
 }
 function atualizarDropdownAcoesIA() {
   const liderAtualIA = document.querySelector("#ia-leader-slot img");
   if (!liderAtualIA) {
-      console.warn("Nenhum ninja líder está no slot de líder da IA.");
-      return;
+    console.warn("Nenhum ninja líder está no slot de líder da IA.");
+    return;
   }
 
   // Obter atributos do ninja líder da IA
@@ -939,11 +1024,11 @@ function atualizarDropdownAcoesIA() {
   // Obter os jutsus da IA, garantindo que seja um array válido
   let jutsusIA = [];
   try {
-      jutsusIA = JSON.parse(liderAtualIA.dataset.jutsus || "[]");
-      if (!Array.isArray(jutsusIA)) jutsusIA = [];
+    jutsusIA = JSON.parse(liderAtualIA.dataset.jutsus || "[]");
+    if (!Array.isArray(jutsusIA)) jutsusIA = [];
   } catch (error) {
-      console.error("Erro ao carregar jutsus da IA:", error);
-      jutsusIA = [];
+    console.error("Erro ao carregar jutsus da IA:", error);
+    jutsusIA = [];
   }
   console.log("Jutsus do líder atual da IA:", jutsusIA);
 
@@ -957,44 +1042,44 @@ function atualizarDropdownAcoesIA() {
   const opcoesBasicasIA = [
     { value: "taijutsu", text: `Ataque Simples (${taijutsu})` },
     { value: "defense", text: `Proteger-se (${defense})` },
-    { value: "speed", text: `Desviar (${speed})` }
+    { value: "speed", text: `Desviar (${speed})` },
   ];
 
-  opcoesBasicasIA.forEach(opcao => {
-      const option = document.createElement("option");
-      option.value = opcao.value;
-      option.textContent = opcao.text;
-      if (opcao.value === "taijutsu") {
-          dropdownOfensivaIA.appendChild(option);
-      } else {
-          dropdownDefensivaIA.appendChild(option);
-      }
+  opcoesBasicasIA.forEach((opcao) => {
+    const option = document.createElement("option");
+    option.value = opcao.value;
+    option.textContent = opcao.text;
+    if (opcao.value === "taijutsu") {
+      dropdownOfensivaIA.appendChild(option);
+    } else {
+      dropdownDefensivaIA.appendChild(option);
+    }
   });
 
   // Adiciona os jutsus da IA corretamente
-  jutsusIA.forEach(jutsu => {
-      if (!jutsu || !jutsu.nameJutsu || !jutsu.usage) {
-          console.warn("Jutsu inválido encontrado para IA:", jutsu);
-          return;
-      }
+  jutsusIA.forEach((jutsu) => {
+    if (!jutsu || !jutsu.nameJutsu || !jutsu.usage) {
+      console.warn("Jutsu inválido encontrado para IA:", jutsu);
+      return;
+    }
 
-      const option = document.createElement("option");
-      option.value = jutsu.nameJutsu;
-      option.textContent = `${jutsu.nameJutsu} (${jutsu.typeJutsu}) - Power: ${jutsu.powerJutsu}`;
+    const option = document.createElement("option");
+    option.value = jutsu.nameJutsu;
+    option.textContent = `${jutsu.nameJutsu} (${jutsu.typeJutsu}) - Power: ${jutsu.powerJutsu}`;
 
-      const usage = jutsu.usage.toLowerCase();
-    
+    const usage = jutsu.usage.toLowerCase();
+
     if (usage === "of") {
       dropdownOfensivaIA.appendChild(option);
     }
-    
+
     if (usage === "df" || usage === "ev") {
       dropdownDefensivaIA.appendChild(option);
     }
     if (usage === "both") {
       dropdownOfensivaIA.appendChild(option);
       dropdownDefensivaIA.appendChild(option.cloneNode(true));
-  }
+    }
   });
 
   console.log("Dropdowns da IA atualizados com ações do ninja líder.");
@@ -1007,20 +1092,32 @@ function encerrarCombate() {
   const defensivaJ1 = document.getElementById("j1-defensive-action").value;
 
   const liderAtual = document.querySelector("#player-leader-slot img");
-    if (!liderAtual) {
-        console.warn("Nenhum ninja líder está no slot de líder do jogador.");
-        return;
-    }
+  if (!liderAtual) {
+    console.warn("Nenhum ninja líder está no slot de líder do jogador.");
+    return;
+  }
 
   if (ofensivaJ1 && defensivaJ1) {
-      // Validar escolha do jogador
-      if (!validarEscolhaAcoes(document.getElementById("j1-offensive-action"), liderAtual)) return;
-      if (!validarEscolhaAcoes(document.getElementById("j1-defensive-action"), liderAtual)) return;
+    // Validar escolha do jogador
+    if (
+      !validarEscolhaAcoes(
+        document.getElementById("j1-offensive-action"),
+        liderAtual
+      )
+    )
+      return;
+    if (
+      !validarEscolhaAcoes(
+        document.getElementById("j1-defensive-action"),
+        liderAtual
+      )
+    )
+      return;
 
-      // Jogador escolheu as ações, agora a IA escolhe suas ações
-      escolherAcoesIA();
+    // Jogador escolheu as ações, agora a IA escolhe suas ações
+    escolherAcoesIA();
   } else {
-      alert("Escolha uma ação ofensiva e uma ação defensiva.");
+    alert("Escolha uma ação ofensiva e uma ação defensiva.");
   }
 }
 //------Escolher ações
@@ -1028,7 +1125,9 @@ function validarRequisitosChakra(chakraReq, atributos) {
   for (const [key, value] of Object.entries(chakraReq)) {
     if ((atributos[key] || 0) < value) {
       console.warn(
-        `Requisito não atendido: ${key} precisa de ${value}, mas possui ${(atributos[key] || 0)}.`
+        `Requisito não atendido: ${key} precisa de ${value}, mas possui ${
+          atributos[key] || 0
+        }.`
       );
       return false;
     }
@@ -1047,7 +1146,9 @@ function validarEscolhaAcoes(elementoDropdown, lider) {
 
   // Buscar o jutsu selecionado
   const jutsus = JSON.parse(lider.dataset.jutsus || "[]");
-  const jutsuSelecionado = jutsus.find(jutsu => jutsu.nameJutsu === opcaoSelecionada.split(" (")[0]);
+  const jutsuSelecionado = jutsus.find(
+    (jutsu) => jutsu.nameJutsu === opcaoSelecionada.split(" (")[0]
+  );
 
   if (!jutsuSelecionado) {
     console.error("Jutsu selecionado não encontrado.");
@@ -1076,7 +1177,7 @@ function validarEscolhaAcoes(elementoDropdown, lider) {
     raiton,
     doton,
     suiton,
-    totalNature: katon + fuuton + raiton + doton + suiton // Soma total dos elementos
+    totalNature: katon + fuuton + raiton + doton + suiton, // Soma total dos elementos
   };
 
   // Validar os requisitos de chakra do jutsu
@@ -1091,49 +1192,58 @@ function validarEscolhaAcoes(elementoDropdown, lider) {
 //------Encerrar escolha das ações
 //------Inicio Modal Descarte
 function openModal(discardPile, title) {
-    currentDiscardPile = discardPile;
-    currentCardIndex = 0;
-    document.getElementById("modal-title").textContent = title; // Atualiza o título do modal
-    document.getElementById("discardModal").style.display = "block";
-    showCard(currentCardIndex);
+  currentDiscardPile = discardPile;
+  currentCardIndex = 0;
+  document.getElementById("modal-title").textContent = title; // Atualiza o título do modal
+  document.getElementById("discardModal").style.display = "block";
+  showCard(currentCardIndex);
 }
 function closeModal() {
-    document.getElementById("discardModal").style.display = "none";
+  document.getElementById("discardModal").style.display = "none";
 }
 function showCard(index) {
   //console.log(`Mostrando card no índice: ${index}`);
 
   if (index >= 0 && index < currentDiscardPile.length) {
-      const cardDisplay = document.getElementById("cardDisplay");
-      const cardData = currentDiscardPile[index]; // O objeto da carta
+    const cardDisplay = document.getElementById("cardDisplay");
+    const cardData = currentDiscardPile[index]; // O objeto da carta
 
-      if (!cardData || typeof cardData !== "object") {
-          console.error("❌ Dados inválidos no descarte:", cardData);
-          return;
-      }
+    if (!cardData || typeof cardData !== "object") {
+      console.error("❌ Dados inválidos no descarte:", cardData);
+      return;
+    }
 
-      const cardId = cardData.id || cardData.idCard; // Extraindo o ID corretamente
+    const cardId = cardData.id || cardData.idCard; // Extraindo o ID corretamente
 
-      //console.log(`🔍 Tentando exibir card com ID: ${cardId}`);
+    //console.log(`🔍 Tentando exibir card com ID: ${cardId}`);
 
-      if (!cardId) {
-          console.error("❌ ID da carta não encontrado dentro do objeto:", cardData);
-          return;
-      }
+    if (!cardId) {
+      console.error(
+        "❌ ID da carta não encontrado dentro do objeto:",
+        cardData
+      );
+      return;
+    }
 
-      const cardElement = document.getElementById(cardId);
+    const cardElement = document.getElementById(cardId);
 
-      if (cardElement) {
-          //console.log(`✅ Elemento do card encontrado: ${cardElement.outerHTML}`);
-          cardDisplay.innerHTML = cardElement.outerHTML;
-      } else {
-          console.error(`❌ Card com ID ${cardId} não encontrado no DOM.`);
-      }
+    if (cardElement) {
+      //console.log(`✅ Elemento do card encontrado: ${cardElement.outerHTML}`);
+      cardDisplay.innerHTML = cardElement.outerHTML;
+    } else {
+      console.error(`❌ Card com ID ${cardId} não encontrado no DOM.`);
+    }
   }
 }
 
-document.getElementById("player-discard-slot").addEventListener("click", () => openModal(arrayDescartePlayer, "Descarte J1"));
-document.getElementById("ia-discard-slot").addEventListener("click", () => openModal(arrayDescarteIA, "Descarte IA"));
+document
+  .getElementById("player-discard-slot")
+  .addEventListener("click", () =>
+    openModal(arrayDescartePlayer, "Descarte J1")
+  );
+document
+  .getElementById("ia-discard-slot")
+  .addEventListener("click", () => openModal(arrayDescarteIA, "Descarte IA"));
 
 const closeDiscardModalButton = document.getElementById("closeDiscardModal");
 if (closeDiscardModalButton) {
@@ -1143,98 +1253,105 @@ if (closeDiscardModalButton) {
 }
 
 document.getElementById("prevCard").addEventListener("click", () => {
-  currentCardIndex = (currentCardIndex > 0) ? currentCardIndex - 1 : currentDiscardPile.length - 1;
+  currentCardIndex =
+    currentCardIndex > 0 ? currentCardIndex - 1 : currentDiscardPile.length - 1;
   showCard(currentCardIndex);
 });
 document.getElementById("nextCard").addEventListener("click", () => {
-  currentCardIndex = (currentCardIndex < currentDiscardPile.length - 1) ? currentCardIndex + 1 : 0;
+  currentCardIndex =
+    currentCardIndex < currentDiscardPile.length - 1 ? currentCardIndex + 1 : 0;
   showCard(currentCardIndex);
 });
 
 // Fechar modal ao clicar fora dele
 window.addEventListener("click", (event) => {
   if (event.target == document.getElementById("discardModal")) {
-      closeModal();
+    closeModal();
   }
 });
 
 //------Inicio Modal Card
 function configurarEventosDeDuploClique() {
-const cards = document.querySelectorAll('#maoJ1 img, .field-slot img');
-//console.log("Total de cards encontrados:", cards.length);
+  const cards = document.querySelectorAll("#maoJ1 img, .field-slot img");
+  //console.log("Total de cards encontrados:", cards.length);
 
-cards.forEach(card => {
-  //console.log("Adicionando evento de duplo clique para o card:", card);
-  card.addEventListener('dblclick', () => openCardDetailModal(card));
-});
+  cards.forEach((card) => {
+    //console.log("Adicionando evento de duplo clique para o card:", card);
+    card.addEventListener("dblclick", () => openCardDetailModal(card));
+  });
 }
 let ultimaClasseRemovida = null; // Variável para armazenar a classe removida
 let cardAtual = null; // Variável para armazenar o card aberto no modal
 
 function openCardDetailModal(card) {
-    // console.log("Abrindo modal para o card:", card);
+  // console.log("Abrindo modal para o card:", card);
 
-    // Salva o card atual para referência ao fechar
-    cardAtual = card;
+  // Salva o card atual para referência ao fechar
+  cardAtual = card;
 
-    // Verifica e salva a classe original (se era field-card ou hand-card)
-    if (card.classList.contains('field-card')) {
-        ultimaClasseRemovida = 'field-card';
-        card.classList.remove('field-card');
-    } else if (card.classList.contains('hand-card')) {
-        ultimaClasseRemovida = 'hand-card';
-        card.classList.remove('hand-card');
-    } else {
-        ultimaClasseRemovida = null; // Caso não tenha nenhuma dessas classes
-    }
+  // Verifica e salva a classe original (se era field-card ou hand-card)
+  if (card.classList.contains("field-card")) {
+    ultimaClasseRemovida = "field-card";
+    card.classList.remove("field-card");
+  } else if (card.classList.contains("hand-card")) {
+    ultimaClasseRemovida = "hand-card";
+    card.classList.remove("hand-card");
+  } else {
+    ultimaClasseRemovida = null; // Caso não tenha nenhuma dessas classes
+  }
 
-    if (!card.src) {
-        console.error("Card src não encontrado.");
-        return;
-    }
+  if (!card.src) {
+    console.error("Card src não encontrado.");
+    return;
+  }
 
-    const katon = parseInt(card.getAttribute("data-chakra-fogo")) || 0; 
-    const fuuton = parseInt(card.getAttribute("data-chakra-vento")) || 0; 
-    const raiton = parseInt(card.getAttribute("data-chakra-raio")) || 0; 
-    const doton = parseInt(card.getAttribute("data-chakra-terra")) || 0; 
-    const suiton = parseInt(card.getAttribute("data-chakra-agua")) || 0; 
-    const somaChakras = katon + fuuton + raiton + doton + suiton;
+  const katon = parseInt(card.getAttribute("data-chakra-fogo")) || 0;
+  const fuuton = parseInt(card.getAttribute("data-chakra-vento")) || 0;
+  const raiton = parseInt(card.getAttribute("data-chakra-raio")) || 0;
+  const doton = parseInt(card.getAttribute("data-chakra-terra")) || 0;
+  const suiton = parseInt(card.getAttribute("data-chakra-agua")) || 0;
+  const somaChakras = katon + fuuton + raiton + doton + suiton;
 
-    document.getElementById("card-name").textContent = card.getAttribute("data-name");
-    document.getElementById("card-image").src = card.src;
-    document.getElementById("chakra-fogo").textContent = katon; 
-    document.getElementById("chakra-vento").textContent = fuuton; 
-    document.getElementById("chakra-raio").textContent = raiton; 
-    document.getElementById("chakra-terra").textContent = doton; 
-    document.getElementById("chakra-agua").textContent = suiton; 
-    document.getElementById("soma-chakras").textContent = somaChakras;
+  document.getElementById("card-name").textContent =
+    card.getAttribute("data-name");
+  document.getElementById("card-image").src = card.src;
+  document.getElementById("chakra-fogo").textContent = katon;
+  document.getElementById("chakra-vento").textContent = fuuton;
+  document.getElementById("chakra-raio").textContent = raiton;
+  document.getElementById("chakra-terra").textContent = doton;
+  document.getElementById("chakra-agua").textContent = suiton;
+  document.getElementById("soma-chakras").textContent = somaChakras;
 
-    document.getElementById("cardDetailModal").style.display = "block";
-    console.log("Modal aberto com sucesso.");
+  document.getElementById("cardDetailModal").style.display = "block";
+  console.log("Modal aberto com sucesso.");
 }
 
 function closeCardDetailModal() {
-    document.getElementById("cardDetailModal").style.display = "none";
+  document.getElementById("cardDetailModal").style.display = "none";
 
-    // Restaurar a classe removida ao fechar o modal
-    if (cardAtual && ultimaClasseRemovida) {
-        cardAtual.classList.add(ultimaClasseRemovida);
-        console.log(`Classe ${ultimaClasseRemovida} restaurada para o card ${cardAtual.id}.`);
-    }
+  // Restaurar a classe removida ao fechar o modal
+  if (cardAtual && ultimaClasseRemovida) {
+    cardAtual.classList.add(ultimaClasseRemovida);
+    console.log(
+      `Classe ${ultimaClasseRemovida} restaurada para o card ${cardAtual.id}.`
+    );
+  }
 
-    // Resetar variáveis
-    ultimaClasseRemovida = null;
-    cardAtual = null;
+  // Resetar variáveis
+  ultimaClasseRemovida = null;
+  cardAtual = null;
 
-    console.log("Modal fechado.");
+  console.log("Modal fechado.");
 }
 configurarEventosDeDuploClique();
-document.getElementById("closeCardDetailModal").addEventListener("click", closeCardDetailModal);
+document
+  .getElementById("closeCardDetailModal")
+  .addEventListener("click", closeCardDetailModal);
 // Fechar modal ao clicar fora dele
 window.addEventListener("click", (event) => {
-    if (event.target == document.getElementById("cardDetailModal")) {
-        closeCardDetailModal();
-    }
+  if (event.target == document.getElementById("cardDetailModal")) {
+    closeCardDetailModal();
+  }
 });
 //------Fim modal card
 function debugEstadoJogo() {
@@ -1242,15 +1359,21 @@ function debugEstadoJogo() {
   const liderAtualJ1 = document.querySelector("#player-leader-slot img");
 
   console.log("Estado do Jogo:", estadoAtual);
-  console.log("Líder IA:", liderAtualIA ? liderAtualIA.dataset.name : "Não encontrado");
-  console.log("Líder Jogador:", liderAtualJ1 ? liderAtualJ1.dataset.name : "Não encontrado");
+  console.log(
+    "Líder IA:",
+    liderAtualIA ? liderAtualIA.dataset.name : "Não encontrado"
+  );
+  console.log(
+    "Líder Jogador:",
+    liderAtualJ1 ? liderAtualJ1.dataset.name : "Não encontrado"
+  );
   console.log("Ações IA:", {
-      ofensiva: document.getElementById("ia-offensive-action")?.value,
-      defensiva: document.getElementById("ia-defensive-action")?.value,
+    ofensiva: document.getElementById("ia-offensive-action")?.value,
+    defensiva: document.getElementById("ia-defensive-action")?.value,
   });
   console.log("Ações Jogador:", {
-      ofensiva: document.getElementById("j1-offensive-action")?.value,
-      defensiva: document.getElementById("j1-defensive-action")?.value,
+    ofensiva: document.getElementById("j1-offensive-action")?.value,
+    defensiva: document.getElementById("j1-defensive-action")?.value,
   });
   console.log("IA usou Hab. de Sup. nesse turno?", suporteIAExecutado);
   console.log("Qtde de hab. sup. usada no turno:", habilidadesUsadas);
@@ -1259,8 +1382,10 @@ function debugEstadoJogo() {
 document.addEventListener("DOMContentLoaded", () => {
   const playerSupports = document.getElementById("player-supports");
   if (!playerSupports) {
-      console.error("❌ Erro: Não foi possível encontrar a div #player-supports.");
-      return;
+    console.error(
+      "❌ Erro: Não foi possível encontrar a div #player-supports."
+    );
+    return;
   }
 
   // Criar o botão
@@ -1281,52 +1406,58 @@ function configurarBotaoHabilidade() {
   const botao = document.getElementById("botao-ativar-habilidade");
 
   if (!botao) {
-      console.error("❌ Botão de ativar habilidade não encontrado.");
-      return;
+    console.error("❌ Botão de ativar habilidade não encontrado.");
+    return;
   }
 
-  document.querySelectorAll("#player-supports .field-slot img").forEach(ninja => {
+  document
+    .querySelectorAll("#player-supports .field-slot img")
+    .forEach((ninja) => {
       ninja.addEventListener("mouseenter", (e) => {
-          if (estadoAtual !== "suporte") return;
+        if (estadoAtual !== "suporte") return;
 
-          console.log(`🔹 Mouse sobre o ninja de suporte: ${ninja.dataset.name}`);
-          suporteSelecionado = ninja;
+        console.log(`🔹 Mouse sobre o ninja de suporte: ${ninja.dataset.name}`);
+        suporteSelecionado = ninja;
 
-          const slotPai = ninja.closest(".field-slot");
-          if (!slotPai) return;
+        const slotPai = ninja.closest(".field-slot");
+        if (!slotPai) return;
 
-          slotPai.appendChild(botao);
-          botao.style.display = "block";
+        slotPai.appendChild(botao);
+        botao.style.display = "block";
       });
 
       ninja.addEventListener("dblclick", () => openCardDetailModal(ninja));
-  });
+    });
 
   // ✅ Evita múltiplas chamadas, removendo qualquer evento duplicado antes de adicionar um novo
   botao.replaceWith(botao.cloneNode(true));
-  document.getElementById("botao-ativar-habilidade").addEventListener("click", () => {
+  document
+    .getElementById("botao-ativar-habilidade")
+    .addEventListener("click", () => {
       if (suporteSelecionado) {
-          ativarHabilidadeSuporte(suporteSelecionado);
+        ativarHabilidadeSuporte(suporteSelecionado);
       }
-  });
+    });
 
   // 🚀 Evita que o botão desapareça quando o mouse estiver sobre ele
   botao.addEventListener("mouseenter", () => {
-      botao.style.display = "block";
+    botao.style.display = "block";
   });
 
   // 🚀 Oculta o botão apenas se o mouse sair tanto do ninja quanto do botão
   botao.addEventListener("mouseleave", () => {
-      botao.style.display = "none";
+    botao.style.display = "none";
   });
 
-  document.querySelectorAll("#player-supports .field-slot img").forEach(ninja => {
+  document
+    .querySelectorAll("#player-supports .field-slot img")
+    .forEach((ninja) => {
       ninja.addEventListener("mouseleave", () => {
-          if (!botao.matches(":hover")) {
-              botao.style.display = "none";
-          }
+        if (!botao.matches(":hover")) {
+          botao.style.display = "none";
+        }
       });
-  });
+    });
 }
 
 // Chamar a função após carregar a página
@@ -1339,51 +1470,52 @@ function voltarConfigJogo() {
 }
 // Chamar a função de carregamento quando a página iniciar
 // Recuperar os dados do localStorage
-const jogadorNome = localStorage.getItem('jogadorNome');
-const jogadorBaralho = JSON.parse(localStorage.getItem('jogadorBaralho'));
-const iaBaralho = JSON.parse(localStorage.getItem('iaBaralho'));
-
+const jogadorNome = localStorage.getItem("jogadorNome");
+const jogadorBaralho = JSON.parse(localStorage.getItem("jogadorBaralho"));
+const iaBaralho = JSON.parse(localStorage.getItem("iaBaralho"));
 
 // Carrega as imagens dos decks do localStorage
-const jogadorDeckImage = localStorage.getItem('jogadorDeckImage');
-const iaDeckImage = localStorage.getItem('iaDeckImage');
+const jogadorDeckImage = localStorage.getItem("jogadorDeckImage");
+const iaDeckImage = localStorage.getItem("iaDeckImage");
 
 // Aplica a photo do deck da IA aos cards da mão da IA
 if (iaDeckImage) {
-  const handCardsIA = document.querySelectorAll('.hand-card-ia');
-  handCardsIA.forEach(card => {
+  const handCardsIA = document.querySelectorAll(".hand-card-ia");
+  handCardsIA.forEach((card) => {
     card.style.backgroundImage = `url('${iaDeckImage}')`;
-    card.style.backgroundSize = 'cover';
-    card.style.backgroundPosition = 'center';
-    card.style.backgroundRepeat = 'no-repeat';
+    card.style.backgroundSize = "cover";
+    card.style.backgroundPosition = "center";
+    card.style.backgroundRepeat = "no-repeat";
   });
 }
 
 // Seleciona os elementos de photo das miniaturas dos decks
-const jogadorDeckImgElement = document.getElementById('player-deck-img');
-const iaDeckImgElement = document.getElementById('ia-deck-img');
+const jogadorDeckImgElement = document.getElementById("player-deck-img");
+const iaDeckImgElement = document.getElementById("ia-deck-img");
 
 // Atualiza as imagens das miniaturas dos decks
 if (jogadorDeckImage && jogadorDeckImgElement) {
   jogadorDeckImgElement.src = jogadorDeckImage;
 } else {
-  console.warn('Imagem do deck do jogador não encontrada. Exibindo photo padrão.');
+  console.warn(
+    "Imagem do deck do jogador não encontrada. Exibindo photo padrão."
+  );
 }
 
 if (iaDeckImage && iaDeckImgElement) {
   iaDeckImgElement.src = iaDeckImage;
 } else {
-  console.warn('Imagem do deck da IA não encontrada. Exibindo photo padrão.');
+  console.warn("Imagem do deck da IA não encontrada. Exibindo photo padrão.");
 }
 
 // Exibir o name do jogador e preparar o campo de batalha
 window.onload = function () {
   if (!jogadorNome || !jogadorBaralho || !iaBaralho) {
-    alert('Erro: Informações do jogador ou dos baralhos estão ausentes.');
-    window.location.href = 'iniciar_jogo.html'; // Redireciona de volta
+    alert("Erro: Informações do jogador ou dos baralhos estão ausentes.");
+    window.location.href = "iniciar_jogo.html"; // Redireciona de volta
     return;
   }
-  
+
   iniciarCampoDeBatalha();
 
   // Chame essa função sempre que precisar reconfigurar os eventos
