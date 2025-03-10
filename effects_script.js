@@ -751,7 +751,6 @@ document.addEventListener("DOMContentLoaded", () => {
     carousel.style.display = "none"; // Oculta o carrossel na inicialização
   }
 });
-
 async function escolherCardPorCarrossel(type, filtro, quantidade, deck, mao) {
   console.log(
     `🔍 Abrindo carrossel para escolher ${quantidade} carta(s) do tipo ${type}...`
@@ -842,7 +841,8 @@ async function escolherCardPorCarrossel(type, filtro, quantidade, deck, mao) {
 
         if (cartasEscolhidas.length >= quantidade) {
           cartasEscolhidas.forEach((card) => mao.push(card));
-          renderizarMao(mao);
+          cartasEscolhidas.forEach((card) => jogadorMao.push(card));
+          renderizarMao(jogadorMao);
 
           carouselContainer.style.display = "none";
           resolve(cartasEscolhidas);

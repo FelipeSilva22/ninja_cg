@@ -205,7 +205,7 @@ function formarMaoInicial(baralhoJogador, maoJogador, baralhoIA, maoIA) {
 function renderizarMao(mao) {
   const maoContainer = document.getElementById("maoJ1");
   maoContainer.innerHTML = ""; // Limpa a mão antes de renderizar
-
+  /*
   const idsExcluidos = [
     ...Array.from(document.querySelectorAll(".field-slot img")).map(
       (card) => card.id
@@ -218,6 +218,8 @@ function renderizarMao(mao) {
   const cardsNaMao = mao.filter((card) => !idsExcluidos.includes(card.idCard));
 
   cardsNaMao.forEach((card) => {
+*/
+  mao.forEach((card) => {
     const cardElement = document.createElement("img");
     cardElement.src = card.photo;
     cardElement.alt = card.name || "Card";
@@ -279,6 +281,7 @@ function renderizarMao(mao) {
     }
 
     maoContainer.appendChild(cardElement);
+    //console.log("📌 Cartas na mão antes de renderizar:",mao.map((c) => c.name));
   });
 }
 function renderizarMaoIA(maoIA) {
