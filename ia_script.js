@@ -206,7 +206,7 @@ function acaoPreparacaoIA() {
         slotLider.innerHTML = "";
         slotLider.appendChild(card);
         resetarEstilosCard(card);
-        removerCardDaMao(card);
+        removerCardDaMao(card, "IA");
         liderIA = card;
       } else {
         const slotVazio = Array.from(slotsIA).find(
@@ -220,7 +220,7 @@ function acaoPreparacaoIA() {
           slotVazio.innerHTML = "";
           slotVazio.appendChild(card);
           resetarEstilosCard(card);
-          removerCardDaMao(card);
+          removerCardDaMao(card, "IA");
         }
       }
     }
